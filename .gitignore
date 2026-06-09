@@ -1,0 +1,24 @@
+# Dependency directories
+node_modules/
+
+# Environment variables (NEVER commit these)
+.env
+.env.local
+.env.*.local
+
+# Databases
+*.db
+*.db-journal
+
+# Build outputs
+dist/
+build/
+.next/
+
+# IDE files
+.vscode/
+.idea/
+
+# OS files
+.DS_Store
+Thumbs.db

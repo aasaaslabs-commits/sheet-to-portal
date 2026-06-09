@@ -1,0 +1,57 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  password  String
+  name      String?
+  jobTitle  String?
+  company   String?
+  bio       String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  sheets    Sheet[]
+}
+
+model Sheet {
+  id            String   @id @default(uuid())
+  userId        String
+  user          User     @relation(fields: [userId], references: [id])
+  originalName  String
+  filePath      String
+  rowCount      Int?
+  columnHeaders String?  // Stored as JSON string
+  createdAt     DateTime @default(now())
+  reports       Report[]
+}
+
+model Report {
+  id          String   @id @default(uuid())
+  sheetId     String
+  sheet       Sheet    @relation(fields: [sheetId], references: [id])
+  title       String
+  description String?
+  shareToken  String   @unique
+  createdAt   DateTime @default(now())
+  widgets     Widget[]
+}
+
+model Widget {
+  id        String   @id @default(uuid())
+  reportId  String
+  report    Report   @relation(fields: [reportId], references: [id])
+  type      String   // e.g., 'bar', 'line', 'pie', 'metric'
+  title     String
+  config    String   // Stored as JSON string (data keys, colors, etc.)
+  createdAt DateTime @default(now())
+}
